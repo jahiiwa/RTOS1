@@ -5,28 +5,30 @@
 
 // Task untuk koneksi WiFi
 void WiFi_setup(void *pvParameters) {
-  if (WiFi.status() != WL_CONNECTED) {
-    WiFi.begin(ssid.c_str(), pass.c_str());  // Tambahkan .c_str() agar sesuai tipe data
+  while (1) {
+    if (WiFi.status() != WL_CONNECTED) {
+      WiFi.begin(ssid.c_str(), pass.c_str());  // Tambahkan .c_str() agar sesuai tipe data
 
-    while (WiFi.status() != WL_CONNECTED) {
-      vTaskDelay(1000 / portTICK_PERIOD_MS);
-      Serial.print(".");
+      while (WiFi.status() != WL_CONNECTED) {
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        Serial.print(".");
+      }
+
+      Serial.println("\nConnected to WiFi");
+
+      // **Pastikan konfigurasi Firebase sudah benar**
+      config.api_key = API_KEY;
+      config.database_url = DATABASE_URL;
+
+      Firebase.begin(&config, &auth);
+      Firebase.reconnectWiFi(true);
+
+      Serial.println("Firebase Initialized");
     }
 
-    Serial.println("\nConnected to WiFi");
-
-    // **Pastikan konfigurasi Firebase sudah benar**
-    config.api_key = API_KEY;
-    config.database_url = DATABASE_URL;
-
-    Firebase.begin(&config, &auth);
-    Firebase.reconnectWiFi(true);
-
-    Serial.println("Firebase Initialized");
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    esp_task_wdt_reset();
   }
-
-  vTaskDelay(1000 / portTICK_PERIOD_MS);
-  esp_task_wdt_reset();
 }
 
 
