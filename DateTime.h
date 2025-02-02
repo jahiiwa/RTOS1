@@ -1,4 +1,3 @@
-#include <Wire.h>
 #include <RTClib.h>  // Library untuk RTC DS3231
 
 RTC_DS3231 rtc;  // Objek untuk RTC DS3231

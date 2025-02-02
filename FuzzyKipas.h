@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include <analogWrite.h>
 #include "esp32-hal-ledc.h"
 #include <Fuzzy.h>
