@@ -9,9 +9,6 @@
 #include "DateTime.h"
 #include "MHZ1.h"
 #include "MHZ2.h"
-#include "MOF_Sensor.h"
-#include "MOF1.h"
-#include "MOF2.h"
 #include "DHT22.h"
 #include "Define_C0.h"
 #include "Define_C1.h"
@@ -22,16 +19,8 @@ void setup() {
 
   Serial.begin(115200);
 
-  wifiSemaphore = xSemaphoreCreateBinary();
-  sensorSemaphore = xSemaphoreCreateMutex();
-  firebaseSemaphore = xSemaphoreCreateBinary();
-
-  xSemaphoreGive(wifiSemaphore);
-  xSemaphoreGive(firebaseSemaphore);
-
   MHZ1_Setup();
   MHZ2_Setup();
-  MOF_Setup();
   DHT_Setup();
 
   C0S();

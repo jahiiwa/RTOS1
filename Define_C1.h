@@ -22,26 +22,6 @@ void C1S() {
   );
 
   xTaskCreatePinnedToCore(
-    MOF1_Task,
-    "MOF1_Task",
-    4096,
-    NULL,
-    1,
-    NULL,
-    1
-  );
-
-  xTaskCreatePinnedToCore(
-    MOF2_Task,
-    "MOF2_Task",
-    4096,
-    NULL,
-    1,
-    NULL,
-    1
-  );
-
-  xTaskCreatePinnedToCore(
     DHT_Task,
     "DHT_Task",
     4096,

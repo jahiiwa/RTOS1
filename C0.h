@@ -3,9 +3,6 @@
 #include <Wire.h>
 #include <RTClib.h>        // Library untuk DS3231
 
-SemaphoreHandle_t wifiSemaphore;
-SemaphoreHandle_t firebaseSemaphore;
-
 // Task untuk sinkronisasi RTC dengan RTOS
 void RTCS(void *pvParameters) {
   while (1) {
@@ -30,55 +27,43 @@ void RTCS(void *pvParameters) {
 
 // Task untuk koneksi WiFi
 void WiFi_setup(void *pvParameters) {
-    while (1) {
-        if (xSemaphoreTake(wifiSemaphore, portMAX_DELAY)) {
-            WiFi.begin(ssid.c_str(), pass.c_str());
+  WiFi.begin(ssid.c_str(), pass.c_str());  // Tambahkan .c_str() agar sesuai tipe data
 
-            int retry = 0;
-            while (WiFi.status() != WL_CONNECTED && retry < 10) {
-                vTaskDelay(1000 / portTICK_PERIOD_MS);
-                Serial.print(".");
-                retry++;
-            }
+  while (WiFi.status() != WL_CONNECTED) {
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    Serial.print(".");
+  }
 
-            if (WiFi.status() == WL_CONNECTED) {
-                Serial.println("\nConnected to WiFi");
-                config.api_key = API_KEY;
-                config.database_url = DATABASE_URL;
-                Firebase.begin(&config, &auth);
-                Firebase.reconnectWiFi(true);
-                Serial.println("Firebase Initialized");
-            } else {
-                Serial.println("Failed to connect to WiFi.");
-            }
+  Serial.println("\nConnected to WiFi");
 
-            xSemaphoreGive(wifiSemaphore);
-        }
+  // **Pastikan konfigurasi Firebase sudah benar**
+  config.api_key = API_KEY;
+  config.database_url = DATABASE_URL;
 
-        vTaskDelay(10000 / portTICK_PERIOD_MS);
-    }
+  Firebase.begin(&config, &auth);
+  Firebase.reconnectWiFi(true);
+
+  Serial.println("Firebase Initialized");
+
+  vTaskDelete(NULL);
 }
 
-// Task untuk mengirim data ke Firebase (Menggunakan Semaphore)
+
+
 void Timer_Kirim(void *pvParameters) {
-    while (1) {
-        if (WiFi.status() == WL_CONNECTED) {
-            if (xSemaphoreTake(firebaseSemaphore, portMAX_DELAY)) {
-                DateTime now = rtc.now();
+  while (1) {
+    if (WiFi.status() == WL_CONNECTED) {
+      DateTime now = rtc.now(); // Ambil waktu dari DS3231
 
-                if (now.year() >= 2024 && now.year() <= 2030) {
-                    if (now.second() % 5 == 0) {
-                        Kirim_raw();
-                        vTaskDelay(1000 / portTICK_PERIOD_MS);
-                    }
-                }
-                
-                xSemaphoreGive(firebaseSemaphore);
-            }
+      if (now.year() >= 2024 && now.year() <= 2030) {
+        if (now.second() % 5 == 0) {
+            Kirim_raw();
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
         }
-
-        Serial.println(F("TimerKirim_Task running"));
-        vTaskDelay(500 / portTICK_PERIOD_MS);
-        esp_task_wdt_reset();
+      }
+      Serial.println(F("TimerKirim_Task running"));
+      vTaskDelay(500 / portTICK_PERIOD_MS);
+      esp_task_wdt_reset(); // Reset WDT setelah task ini selesai looping
     }
+  }
 }
