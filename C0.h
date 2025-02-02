@@ -12,6 +12,7 @@ void Display1(void *pvParameters) {
 
     xSemaphoreGive(SemOLED2);
     vTaskDelay(2000 / portTICK_PERIOD_MS);
+    esp_task_wdt_reset();
   }
 }
 
@@ -24,6 +25,7 @@ void Display2(void *pvParameters) {
 
     vTaskDelay(2000 / portTICK_PERIOD_MS);
     xSemaphoreGive(SemOLED1);
+    esp_task_wdt_reset();
   }
 }
 
@@ -36,6 +38,7 @@ void WiFi_setup(void *pvParameters) {
       while (WiFi.status() != WL_CONNECTED) {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
         Serial.print(".");
+        esp_task_wdt_reset();
       }
 
       Serial.println("\nConnected to WiFi");
@@ -48,6 +51,7 @@ void WiFi_setup(void *pvParameters) {
       Firebase.reconnectWiFi(true);
 
       Serial.println("Firebase Initialized");
+      esp_task_wdt_reset();
     }
 
     vTaskDelay(1000 / portTICK_PERIOD_MS);
