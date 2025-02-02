@@ -1,4 +1,4 @@
-TaskHandle_t WiFi_setup_handler, Timer_Kirim_handler;
+TaskHandle_t WiFi_setup_handler, Timer_Kirim_handler, Display1_handler, Display2_handler;
 
 #include "C0.h"
 
@@ -21,6 +21,26 @@ void C0S() {
     &Timer_Kirim_handler,
     0);
 
+  xTaskCreatePinnedToCore(
+    Display1,
+    "Display1",
+    2048,
+    NULL,
+    1,
+    &Display1_handler,
+    0);
+
+  xTaskCreatePinnedToCore(
+    Display2,
+    "Display2",
+    2048,
+    NULL,
+    1,
+    &Display2_handler,
+    0);
+
   esp_task_wdt_add(WiFi_setup_handler);
   esp_task_wdt_add(Timer_Kirim_handler);
+  esp_task_wdt_add(Display1_handler);
+  esp_task_wdt_add(Display2_handler);
 }

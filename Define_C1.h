@@ -39,7 +39,6 @@ void C1S() {
     &PWM_Task_handler,
     1);
 
-
   xTaskCreatePinnedToCore(
     DHT_Task,
     "DHT_Task",

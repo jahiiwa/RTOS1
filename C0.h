@@ -1,7 +1,35 @@
 #include "Kirim.h"
 #include "Wifi.h"
 #include <Wire.h>
+#include "OLED.h"
 #include <RTClib.h>  // Library untuk DS3231
+
+SemaphoreHandle_t SemOLED1, SemOLED2;
+
+void Display1(void *pvParameters) {
+  while (1) {
+    xSemaphoreTake(SemOLED1, portMAX_DELAY);
+    Serial.println("Display1");
+    OLED_print("MHZ Inlet", String(mhz_inlet) + "ppm");
+    OLED1_print("MHZ Outlet", String(mhz_outlet) + "ppm");
+
+    vTaskDelay(2000 / portTICK_PERIOD_MS);
+    xSemaphoreGive(SemOLED2);
+  }
+}
+
+void Display2(void *pvParameters) {
+  while (1) {
+    xSemaphoreTake(SemOLED2, portMAX_DELAY);
+    Serial.println("Display2");
+    OLED_print("Suhu Udara", String(t) + " C");
+    OLED1_print("Kelembapan", String(h) + "%");
+
+
+    vTaskDelay(2000 / portTICK_PERIOD_MS);
+    xSemaphoreGive(SemOLED1);
+  }
+}
 
 // Task untuk koneksi WiFi
 void WiFi_setup(void *pvParameters) {
