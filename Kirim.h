@@ -32,8 +32,8 @@ void Kirim_raw() {
   FirebaseJson json;
   json.set("mhz_inlet", mhz_inlet);
   json.set("mhz_outlet", mhz_outlet);
-  // json.set("mof_inlet", mof_inlet);
-  // json.set("mof_outlet", mof_outlet);
+  json.set("mof_inlet", mof_inlet);
+  json.set("mof_outlet", mof_outlet);
   json.set("temperature", t);
   json.set("humidity", h);
 

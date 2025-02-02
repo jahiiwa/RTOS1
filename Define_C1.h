@@ -1,5 +1,4 @@
-#include "esp_task_wdt.h"
-TaskHandle_t MHZ1_Task_handler, MHZ2_Task_handler, DHT_Task_handler, Fuzzy_Task_handler;
+TaskHandle_t MHZ1_Task_handler, MHZ2_Task_handler, MOF_Task_handler, PWM_Task_handler, DHT_Task_handler, Fuzzy_Task_handler;
 
 #include "C1.h"
 
@@ -23,6 +22,25 @@ void C1S() {
     1);
 
   xTaskCreatePinnedToCore(
+    MOF_Task,
+    "MOF_Task",
+    4096,
+    NULL,
+    1,
+    &MOF_Task_handler,
+    1);
+
+  xTaskCreatePinnedToCore(
+    PWM_Task,
+    "PWM_Task",
+    4096,
+    NULL,
+    1,
+    &PWM_Task_handler,
+    1);
+
+
+  xTaskCreatePinnedToCore(
     DHT_Task,
     "DHT_Task",
     4096,
@@ -43,6 +61,8 @@ void C1S() {
 
   esp_task_wdt_add(MHZ1_Task_handler);
   esp_task_wdt_add(MHZ2_Task_handler);
+  esp_task_wdt_add(MOF_Task_handler);
+  esp_task_wdt_add(PWM_Task_handler);
   esp_task_wdt_add(DHT_Task_handler);
   esp_task_wdt_add(Fuzzy_Task_handler);
 }

@@ -1,4 +1,5 @@
 #include "FuzzyKipas.h"
+CO2Sensor co2Sensor;
 
 void MHZ1_Task(void *pvParameters) {
   while (1) {
@@ -19,6 +20,30 @@ void MHZ2_Task(void *pvParameters) {
     esp_task_wdt_reset();  // Reset WDT setelah task ini selesai looping
   }
 }
+
+void MOF_Task(void *pvParameters) {
+    while (1) {
+      mof_inlet = co2Sensor.readCO2(0); // Membaca dari A0
+      mof_outlet = co2Sensor.readCO2(3); // Membaca dari A3
+      Serial.print("CO2 Inlet: "); Serial.print(mof_inlet); Serial.println(" ppm");
+      Serial.print("CO2 Outlet: "); Serial.print(mof_outlet); Serial.println(" ppm");
+      vTaskDelay(5000 / portTICK_PERIOD_MS);
+      esp_task_wdt_reset(); 
+  }
+}
+
+// Task untuk mengontrol PWM
+void PWM_Task(void *pvParameters) {
+    while (1) {
+    PWM_Loop();
+    Serial.println(F("PWM_Task running"));
+
+    vTaskDelay(5000 / portTICK_PERIOD_MS);
+    esp_task_wdt_reset();  // Reset WDT setelah task ini selesai looping
+  }
+}
+
+
 
 void DHT_Task(void *pvParameters) {
   while (1) {
