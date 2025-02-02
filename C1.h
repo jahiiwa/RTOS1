@@ -5,6 +5,7 @@ void MHZ1_Task(void *pvParameters) {
     MHZ1_Loop();
     Serial.println(F("MHZ1_Task running"));
     vTaskDelay(5000 / portTICK_PERIOD_MS);
+    esp_task_wdt_reset();  // Reset WDT setelah task ini selesai looping
   }
 }
 
@@ -13,6 +14,7 @@ void MHZ2_Task(void *pvParameters) {
     MHZ2_Loop();
     Serial.println(F("MHZ2_Task running"));
     vTaskDelay(5000 / portTICK_PERIOD_MS);
+    esp_task_wdt_reset();  // Reset WDT setelah task ini selesai looping
   }
 }
 
@@ -21,6 +23,7 @@ void DHT_Task(void *pvParameters) {
     DHT_Loop();
     Serial.println(F("DHT_Task running"));
     vTaskDelay(5000 / portTICK_PERIOD_MS);
+    esp_task_wdt_reset();  // Reset WDT setelah task ini selesai looping
   }
 }
 
@@ -60,5 +63,6 @@ void Fuzzy_Task(void *pvParameters) {
 
     // Delay 5 detik menggunakan RTOS
     vTaskDelay(5000 / portTICK_PERIOD_MS);
+    esp_task_wdt_reset();
   }
 }

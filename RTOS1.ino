@@ -1,3 +1,4 @@
+#include <esp_task_wdt.h>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 #include <HTTPClient.h>
@@ -13,6 +14,9 @@
 #include "Define_C1.h"
 
 void setup() {
+  esp_task_wdt_init(20, true);  // Set WDT timeout to 10 seconds
+  esp_task_wdt_add(NULL);       // Add current thread to WDT
+
   Serial.begin(115200);
 
   MHZ1_Setup();
@@ -25,4 +29,5 @@ void setup() {
 }
 
 void loop() {
+  esp_task_wdt_reset();  // Reset WDT setelah task ini selesai looping
 }
