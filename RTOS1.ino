@@ -15,7 +15,6 @@
 
 void setup() {
   esp_task_wdt_init(20, true);  // Set WDT timeout to 10 seconds
-  esp_task_wdt_add(NULL);       // Add current thread to WDT
 
   Serial.begin(115200);
 
@@ -23,11 +22,14 @@ void setup() {
   MHZ2_Setup();
   DHT_Setup();
 
+  RTCS();
+
   C0S();
   C1S();
-  C2S();
+
+  esp_task_wdt_delete(NULL);
+  vTaskDelete(NULL);
 }
 
 void loop() {
-  esp_task_wdt_reset();  // Reset WDT setelah task ini selesai looping
 }

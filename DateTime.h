@@ -1,11 +1,15 @@
 #include <Wire.h>
-#include <RTClib.h> // Library untuk RTC DS3231
+#include <RTClib.h>  // Library untuk RTC DS3231
 
-RTC_DS3231 rtc; // Objek untuk RTC DS3231
+RTC_DS3231 rtc;  // Objek untuk RTC DS3231
+
+void RTCS() {
+  rtc.begin();
+}
 
 // Fungsi untuk mendapatkan waktu dalam berbagai format
 String get_date_time(int choose) {
-  DateTime now = rtc.now(); // Ambil waktu dari modul RTC DS3231
+  DateTime now = rtc.now();  // Ambil waktu dari modul RTC DS3231
 
   // Format bulan dan hari agar selalu 2 digit
   String string_month = (now.month() < 10) ? "0" + String(now.month()) : String(now.month());
@@ -13,15 +17,14 @@ String get_date_time(int choose) {
 
   // Pilihan format pengembalian data
   if (choose == 0) {
-    return String(now.year()) + "-" + string_month + "-" + string_day + " " +
-           String(now.hour()) + ":" + String(now.minute()) + ":" + String(now.second());
+    return String(now.year()) + "-" + string_month + "-" + string_day + " " + String(now.hour()) + ":" + String(now.minute()) + ":" + String(now.second());
   } else if (choose == 1) {
     return String(now.year()) + "-" + string_month + "-" + string_day;
   } else if (choose == 2) {
     return String(now.hour()) + ":" + String(now.minute()) + ":" + String(now.second());
   }
 
-  return ""; // Default jika choose tidak sesuai
+  return "";  // Default jika choose tidak sesuai
 }
 
 // Fungsi untuk mendapatkan waktu dengan presisi menit dan detik

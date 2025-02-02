@@ -1,3 +1,6 @@
+#include "esp_task_wdt.h"
+TaskHandle_t MHZ1_Task_handler, MHZ2_Task_handler, DHT_Task_handler, Fuzzy_Task_handler;
+
 #include "C1.h"
 
 void C1S() {
@@ -7,9 +10,8 @@ void C1S() {
     4096,
     NULL,
     1,
-    NULL,
-    1
-  );
+    &MHZ1_Task_handler,
+    1);
 
   xTaskCreatePinnedToCore(
     MHZ2_Task,
@@ -17,9 +19,8 @@ void C1S() {
     4096,
     NULL,
     1,
-    NULL,
-    1
-  );
+    &MHZ2_Task_handler,
+    1);
 
   xTaskCreatePinnedToCore(
     DHT_Task,
@@ -27,19 +28,21 @@ void C1S() {
     4096,
     NULL,
     1,
-    NULL,
-    1
-  );
-}
+    &DHT_Task_handler,
+    1);
 
-void C2S() {
   xTaskCreatePinnedToCore(
-    Fuzzy_Task,   // Fungsi task
-    "Fuzzy_Task", // Nama task
-    4096,       // Ukuran stack
-    NULL,        // Parameter untuk task
-    1,           // Prioritas task
-    NULL,        // Handle task
-    1            // Jalankan di core 1
+    Fuzzy_Task,           // Fungsi task
+    "Fuzzy_Task",         // Nama task
+    4096,                 // Ukuran stack
+    NULL,                 // Parameter untuk task
+    1,                    // Prioritas task
+    &Fuzzy_Task_handler,  // Handle task
+    1                     // Jalankan di core 1
   );
+
+  esp_task_wdt_add(MHZ1_Task_handler);
+  esp_task_wdt_add(MHZ2_Task_handler);
+  esp_task_wdt_add(DHT_Task_handler);
+  esp_task_wdt_add(Fuzzy_Task_handler);
 }
