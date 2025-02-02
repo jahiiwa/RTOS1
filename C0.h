@@ -21,7 +21,6 @@ void RTCS(void *pvParameters) {
     //Serial.println(F("Waktu sekarang: " + get_date_time(0)));
     Serial.println(F("RTC_Task running"));
     vTaskDelay(1000 / portTICK_PERIOD_MS); // Delay 1 detik untuk pembaruan waktu
-    esp_task_wdt_reset(); // Reset watchdog timer
   }
 }
 
@@ -63,7 +62,6 @@ void Timer_Kirim(void *pvParameters) {
       }
       Serial.println(F("TimerKirim_Task running"));
       vTaskDelay(500 / portTICK_PERIOD_MS);
-      esp_task_wdt_reset(); // Reset WDT setelah task ini selesai looping
     }
   }
 }
