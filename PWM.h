@@ -1,6 +1,6 @@
 #include "Kontrol_PWM.h"
 
-float mof_inlet, mof_outlet;
+double mof_inlet, mof_outlet;
 
 void PWM_Setup() {
   // Setup PWM

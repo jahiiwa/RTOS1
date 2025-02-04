@@ -27,13 +27,14 @@ void writeDataToSD() {
                         String(mof_inlet) + " ppm, " + 
                         String(mof_outlet) + " ppm, " + 
                         String(t) + " C, " + 
-                        String(h) + " %";
+                        String(h) + " %, " +
+                        String(output) + " pwm";
 
     // Tulis data ke file
     file.println(dataString);
     file.close();  // Tutup file setelah selesai menulis
     
-    Serial.println("Data tersimpan: " + dataString);
+    Serial.println(dataString);
 }
 
 void SD_Setup() {

@@ -4,7 +4,7 @@ SemaphoreHandle_t SemOLED1, SemOLED2, SemOLED3;
 void Display1(void *pvParameters) {
   while (1) {
     xSemaphoreTake(SemOLED1, portMAX_DELAY);
-    Serial.println("Display1");
+    //Serial.println("Display1");
     OLED1_print("MHZ Inlet", String(mhz_inlet) + " ppm");
     OLED2_print("MHZ Outlet", String(mhz_outlet) + " ppm");
 
@@ -17,7 +17,7 @@ void Display1(void *pvParameters) {
 void Display2(void *pvParameters) {
   while (1) {
     xSemaphoreTake(SemOLED2, portMAX_DELAY);
-    Serial.println("Display2");
+    //Serial.println("Display2");
     OLED1_print("Suhu Udara", String(t) + " C");
     OLED2_print("Kelembapan", String(h) + " %");
 
@@ -30,7 +30,7 @@ void Display2(void *pvParameters) {
 void Display3(void *pvParameters) {
   while (1) {
     xSemaphoreTake(SemOLED3, portMAX_DELAY);
-    Serial.println("Display3");
+    //Serial.println("Display3");
     OLED1_print("MOF inlet", String(mof_inlet) + " ppm");
     OLED2_print("MOF outlet", String(mof_outlet) + " ppm");
 

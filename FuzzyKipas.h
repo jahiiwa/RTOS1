@@ -3,6 +3,7 @@
 #include <Fuzzy.h>
 
 Fuzzy *fuzzy = new Fuzzy();
+float output;
 
 // Pin untuk LED
 const int ledHijau = 26;  // LED hijau untuk kipas pelan
@@ -66,15 +67,13 @@ void Kipas_Loop(){
   fuzzy->fuzzify();
 
   // Hitung output fuzzy logic
-  float output = fuzzy->defuzzify(1);
+  output = fuzzy->defuzzify(1);
 
   // Batasi output PWM ke rentang yang valid
   if (output < 0) output = 0;
   if (output > 255) output = 255;
   // Tulis output ke pin PWM
   ledcWrite(4, output);
-  Serial.println(String(output));
-
     // Kontrol LED berdasarkan kategori output kipas
     if (output >= 100 && output <= 140) {  // Kipas pelan
       digitalWrite(ledHijau, HIGH);
