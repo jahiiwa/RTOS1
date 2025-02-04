@@ -64,7 +64,7 @@ void Fuzzy_Task(void *pvParameters) {
     // Tampilkan nilai input dan output ke Serial Monitor
     Serial.println(F("Fuzzy_Task running"));
     // Delay 5 detik menggunakan RTOS
-    vTaskDelay(60000 / portTICK_PERIOD_MS);
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
     esp_task_wdt_reset();
   }
 }

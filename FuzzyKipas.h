@@ -10,7 +10,8 @@ const int ledKuning = 25; // LED kuning untuk kipas standar
 const int ledMerah = 33;  // LED merah untuk kipas cepat
 
 void Kipas_setup(){
-  analogWriteFrequency(4, 25000);
+  ledcSetup(4, 25000, 10);  
+  ledcAttachPin(4, 4);  
 
   // Inisialisasi pin LED sebagai output
   pinMode(ledHijau, OUTPUT);
@@ -71,8 +72,9 @@ void Kipas_Loop(){
   if (output < 0) output = 0;
   if (output > 255) output = 255;
 
+  int dutyCycle = map(output, 0, 255, 20, 204);  
   // Tulis output ke pin PWM
-  ledcWrite(4, output);
+  ledcWrite(4, dutyCycle);
 
     // Kontrol LED berdasarkan kategori output kipas
     if (output >= 0 && output <= 125) {  // Kipas pelan
