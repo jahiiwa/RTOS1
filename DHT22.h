@@ -1,5 +1,4 @@
-float t;
-int h;
+float t, h;
 
 #include <DHT.h>
 

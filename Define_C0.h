@@ -1,26 +1,8 @@
-TaskHandle_t WiFi_setup_handler, Timer_Kirim_handler, Display1_handler, Display2_handler;
+TaskHandle_t Display1_handler, Display2_handler, Display3_handler, SD_handler;
 
 #include "C0.h"
 
 void C0S() {
-  xTaskCreatePinnedToCore(
-    WiFi_setup,
-    "WiFi_setup",
-    3072,
-    NULL,
-    1,
-    &WiFi_setup_handler,
-    0);
-
-  xTaskCreatePinnedToCore(
-    Timer_Kirim,
-    "Timer_Kirim",
-    4096,
-    NULL,
-    1,
-    &Timer_Kirim_handler,
-    0);
-
   xTaskCreatePinnedToCore(
     Display1,
     "Display1",
@@ -39,8 +21,26 @@ void C0S() {
     &Display2_handler,
     0);
 
-  esp_task_wdt_add(WiFi_setup_handler);
-  esp_task_wdt_add(Timer_Kirim_handler);
+  xTaskCreatePinnedToCore(
+    Display3,
+    "Display3",
+    2048,
+    NULL,
+    1,
+    &Display3_handler,
+    0);
+  
+    xTaskCreatePinnedToCore(
+        SDTask,     // Fungsi Task
+        "SDTask",   // Nama Task
+        4096,       // Ukuran Stack
+        NULL,       // Parameter
+        1,          // Prioritas Task
+        &SD_handler,       // Handle Task
+        0           // Core 0 (ESP32 memiliki dua core: 0 & 1)
+    );
+
   esp_task_wdt_add(Display1_handler);
-  esp_task_wdt_add(Display2_handler);
+  esp_task_wdt_add(Display2_handler);  
+  esp_task_wdt_add(Display3_handler);
 }

@@ -1,6 +1,6 @@
 // Define PWM pins for ESP32
-#define PWM_PIN1 -1
-#define PWM_PIN2 -1
+#define PWM_PIN1 16
+#define PWM_PIN2 17
 
 void setupPWM() {
   // Inisialisasi saluran PWM

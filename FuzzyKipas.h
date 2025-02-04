@@ -10,7 +10,7 @@ const int ledKuning = 25; // LED kuning untuk kipas standar
 const int ledMerah = 33;  // LED merah untuk kipas cepat
 
 void Kipas_setup(){
-  analogWriteFrequency(4, 20000);
+  analogWriteFrequency(4, 25000);
 
   // Inisialisasi pin LED sebagai output
   pinMode(ledHijau, OUTPUT);
@@ -58,4 +58,34 @@ void Kipas_setup(){
   thenKipasCepat->addOutput(cepat);
   FuzzyRule *fuzzyRule03 = new FuzzyRule(3, ifCo2Tinggi, thenKipasCepat);
   fuzzy->addFuzzyRule(fuzzyRule03);
+}
+
+void Kipas_Loop(){
+  fuzzy->setInput(1, mhz_inlet);
+  fuzzy->fuzzify();
+
+  // Hitung output fuzzy logic
+  float output = fuzzy->defuzzify(1);
+
+  // Batasi output PWM ke rentang yang valid
+  if (output < 0) output = 0;
+  if (output > 255) output = 255;
+
+  // Tulis output ke pin PWM
+  ledcWrite(4, output);
+
+    // Kontrol LED berdasarkan kategori output kipas
+    if (output >= 0 && output <= 125) {  // Kipas pelan
+      digitalWrite(ledHijau, HIGH);
+      digitalWrite(ledKuning, LOW);
+      digitalWrite(ledMerah, LOW);
+    } else if (output > 125 && output <= 210) {  // Kipas standar
+      digitalWrite(ledHijau, LOW);
+      digitalWrite(ledKuning, HIGH);
+      digitalWrite(ledMerah, LOW);
+    } else if (output > 210 && output <= 255) {  // Kipas cepat
+      digitalWrite(ledHijau, LOW);
+      digitalWrite(ledKuning, LOW);
+      digitalWrite(ledMerah, HIGH);
+    }
 }
