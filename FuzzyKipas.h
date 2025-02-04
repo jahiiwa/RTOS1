@@ -30,11 +30,11 @@ void Kipas_setup(){
 
   // Konfigurasi Fuzzy Logic untuk Output Kipas
   FuzzyOutput *kipas = new FuzzyOutput(1);
-  FuzzySet *pelan = new FuzzySet(0, 0, 85, 125);       // Kategori pelan
+  FuzzySet *pelan = new FuzzySet(100, 100, 140, 160);       // Kategori pelan
   kipas->addFuzzySet(pelan);
-  FuzzySet *standar = new FuzzySet(85, 125, 170, 210); // Kategori sedang
+  FuzzySet *standar = new FuzzySet(140, 160, 190, 220); // Kategori sedang
   kipas->addFuzzySet(standar);
-  FuzzySet *cepat = new FuzzySet(170, 210, 255, 255);  // Kategori cepat
+  FuzzySet *cepat = new FuzzySet(190, 220, 255, 255);  // Kategori cepat
   kipas->addFuzzySet(cepat);
   fuzzy->addFuzzyOutput(kipas);
 
@@ -71,21 +71,20 @@ void Kipas_Loop(){
   // Batasi output PWM ke rentang yang valid
   if (output < 0) output = 0;
   if (output > 255) output = 255;
-
-  int dutyCycle = map(output, 0, 255, 20, 204);  
   // Tulis output ke pin PWM
-  ledcWrite(4, dutyCycle);
+  ledcWrite(4, output);
+  Serial.println(String(output));
 
     // Kontrol LED berdasarkan kategori output kipas
-    if (output >= 0 && output <= 125) {  // Kipas pelan
+    if (output >= 100 && output <= 140) {  // Kipas pelan
       digitalWrite(ledHijau, HIGH);
       digitalWrite(ledKuning, LOW);
       digitalWrite(ledMerah, LOW);
-    } else if (output > 125 && output <= 210) {  // Kipas standar
+    } else if (output > 140 && output <= 190) {  // Kipas standar
       digitalWrite(ledHijau, LOW);
       digitalWrite(ledKuning, HIGH);
       digitalWrite(ledMerah, LOW);
-    } else if (output > 210 && output <= 255) {  // Kipas cepat
+    } else if (output > 190 && output <= 255) {  // Kipas cepat
       digitalWrite(ledHijau, LOW);
       digitalWrite(ledKuning, LOW);
       digitalWrite(ledMerah, HIGH);

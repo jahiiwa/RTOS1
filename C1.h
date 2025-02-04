@@ -1,9 +1,11 @@
+#include <stdio.h>
+
 void MHZ1_Task(void *pvParameters) {
   while (1) {
     MHZ1_Loop();
     Serial.println(F("MHZ1_Task running"));
 
-    vTaskDelay(60000 / portTICK_PERIOD_MS);
+    vTaskDelay(5000 / portTICK_PERIOD_MS);
     esp_task_wdt_reset();  // Reset WDT setelah task ini selesai looping
   }
 }
@@ -13,15 +15,15 @@ void MHZ2_Task(void *pvParameters) {
     MHZ2_Loop();
     Serial.println(F("MHZ2_Task running"));
 
-    vTaskDelay(60000 / portTICK_PERIOD_MS);
+    vTaskDelay(5000 / portTICK_PERIOD_MS);
     esp_task_wdt_reset();  // Reset WDT setelah task ini selesai looping
   }
 }
 
 void MOF_Task(void *pvParameters) {
   while (1) {
-    mof_inlet = CO2L(0);   // Membaca dari A0
-    mof_outlet = CO2L(3);  // Membaca dari A3
+    mof_inlet = (CO2L(0)/16761)*3.61;   // Membaca dari A0
+    mof_outlet = (CO2L(3)/17235)*4e-11;  // Membaca dari A3
     
     Serial.print("CO2 Inlet: ");
     Serial.print(mof_inlet);
@@ -30,7 +32,7 @@ void MOF_Task(void *pvParameters) {
     Serial.print(mof_outlet);
     Serial.println(" ppm");
 
-    vTaskDelay(60000 / portTICK_PERIOD_MS);
+    vTaskDelay(5000 / portTICK_PERIOD_MS);
     esp_task_wdt_reset();
   }
 }
@@ -41,7 +43,7 @@ void PWM_Task(void *pvParameters) {
     PWM_Loop();
     Serial.println(F("PWM_Task running"));
 
-    vTaskDelay(60000 / portTICK_PERIOD_MS);
+    vTaskDelay(5000 / portTICK_PERIOD_MS);
     esp_task_wdt_reset();  // Reset WDT setelah task ini selesai looping
   }
 }
@@ -53,7 +55,7 @@ void DHT_Task(void *pvParameters) {
     DHT_Loop();
     Serial.println(F("DHT_Task running"));
 
-    vTaskDelay(60000 / portTICK_PERIOD_MS);
+    vTaskDelay(5000 / portTICK_PERIOD_MS);
     esp_task_wdt_reset();  // Reset WDT setelah task ini selesai looping
   }
 }
@@ -64,7 +66,7 @@ void Fuzzy_Task(void *pvParameters) {
     // Tampilkan nilai input dan output ke Serial Monitor
     Serial.println(F("Fuzzy_Task running"));
     // Delay 5 detik menggunakan RTOS
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    vTaskDelay(5000 / portTICK_PERIOD_MS);
     esp_task_wdt_reset();
   }
 }

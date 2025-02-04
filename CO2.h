@@ -16,6 +16,6 @@ float CO2L(uint8_t channel) {
     if (adcValue < 0) {
       return NAN;  // Return NaN jika gagal membaca sensor
     }
-    return (adcValue * 3300.0 / 17687);  // Konversi ke nilai yang sesuai
+    return (adcValue * 3300.0);  // Konversi ke nilai yang sesuai
   } else return NAN;
 }

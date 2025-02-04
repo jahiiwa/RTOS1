@@ -1,3 +1,4 @@
+#include "esp_task_wdt.h"
 SemaphoreHandle_t SemOLED1, SemOLED2, SemOLED3;
 
 void Display1(void *pvParameters) {
@@ -6,7 +7,7 @@ void Display1(void *pvParameters) {
     Serial.println("Display1");
     OLED1_print("MHZ Inlet", String(mhz_inlet) + " ppm");
     OLED2_print("MHZ Outlet", String(mhz_outlet) + " ppm");
-    
+
     vTaskDelay(2000 / portTICK_PERIOD_MS);
     xSemaphoreGive(SemOLED2);
     esp_task_wdt_reset();
@@ -40,8 +41,9 @@ void Display3(void *pvParameters) {
 }
 
 void SDTask(void *pvParameters) {
-    while (1) {
-        writeDataToSD();
-        vTaskDelay(60000 / portTICK_PERIOD_MS);  // Tunggu 5 detik sebelum menulis data lagi
-    }
+  while (1) {
+    writeDataToSD();
+    vTaskDelay(5000 / portTICK_PERIOD_MS);  // Tunggu 5 detik sebelum menulis data lagi
+    esp_task_wdt_reset();
+  }
 }
